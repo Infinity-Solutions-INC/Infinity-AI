@@ -55,8 +55,8 @@ public class QuerysBD {
     // Salvar uma resposta no banco
     public void salvarResposta(String prompt, String response) {
         jdbcTemplate.update("""
-                INSERT INTO recomendacao_recebida (fkcodigo_prompt, descricao_recomendacao_recebida, dt_hr_recomendacao_recebida)
-                VALUES (1, ?, CURRENT_TIMESTAMP)
+                INSERT INTO recomendacao_recebida (fkcodigo_instituicao, fkcodigo_prompt, descricao_recomendacao_recebida, dt_hr_recomendacao_recebida)
+                VALUES (100, 1, ?, CURRENT_TIMESTAMP)
                 """, response);
     }
 
