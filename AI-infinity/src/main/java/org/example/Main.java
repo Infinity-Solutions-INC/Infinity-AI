@@ -10,10 +10,20 @@ public class Main {
 
 
         try {
+            String idIntituicao = System.getenv("ID_INSTITUICAO");
+//            String idIntituicao = "100";
 //          Obter o prompt do banco
-            String taxaEvasao = querysBD.obterTaxaEvasão(100);
+            String qtdTurmasperiodoManhaIntegral = querysBD.obterQtdTurmaMeV(idIntituicao);
+            String qtdMensalidadesAltas = querysBD.obterMensalidadeGrande(idIntituicao);
+            String qtdTurmasExatas = querysBD.obterQtdTurmasExatas(idIntituicao);
+            String qtdTurmasSaude = querysBD.obterQtdTurmasSaude(idIntituicao);
+            String qtdTurmasCienciasSociais = querysBD.obterQtdTurmasCienciasSociais(idIntituicao);
             String prompt = querysBD.obterPromptPorId(1);
-            prompt = prompt.replace("<X>", taxaEvasao);
+            prompt = prompt.replace("<x1>", qtdTurmasperiodoManhaIntegral);
+            prompt = prompt.replace("<x2>", qtdMensalidadesAltas);
+            prompt = prompt.replace("<x3>", qtdTurmasExatas);
+            prompt = prompt.replace("<x4>", qtdTurmasSaude);
+            prompt = prompt.replace("<x5>", qtdTurmasCienciasSociais);
             System.out.println("Prompt: " + prompt);
 
             // Obter resposta da API

@@ -18,7 +18,7 @@ public class QuerysBD {
 //        dataSource.setUrl("jdbc:mysql://localhost:3306/infinity_solutions?useSSL=false&serverTimezone=UTC");
         dataSource.setUrl("jdbc:mysql://mysql-app:3306/infinity_solutions?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8");
 //        dataSource.setUsername("root");
-//        dataSource.setPassword("rootpassword");
+//        dataSource.setPassword("010652");
         dataSource.setPassword(System.getenv("DB_PASSWORD"));
         dataSource.setUsername(System.getenv("DB_USER"));
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -42,13 +42,57 @@ public class QuerysBD {
                 """, new Object[]{id}, String.class);
     }
 
-    public String obterTaxaEvasão(int id) {
+//    public String obterTaxaEvasão(String id) {
+//        return jdbcTemplate.queryForObject("""
+//                SELECT ROUND((SUM(t.qtd_ingressantes) - SUM(t.qtd_alunos_permanencia)) * 100.0 / SUM(t.qtd_ingressantes),2)
+//                FROM turma t
+//                INNER JOIN curso c ON t.fkcodigo_curso = c.codigo_curso
+//                INNER JOIN instituicao inst ON c.fkcodigo_instituicao = inst.codigo_instituicao
+//                WHERE inst.codigo_instituicao = ?;
+//                """, new Object[]{id}, String.class);
+//    }
+public String obterQtdTurmaMeV(String id) {
+    return jdbcTemplate.queryForObject("""
+            select count(turma.codigo_turma) from turma
+            inner join curso on curso.codigo_curso = turma.fkcodigo_curso
+            inner join instituicao on instituicao.codigo_instituicao = curso.fkcodigo_instituicao
+            where instituicao.codigo_instituicao = ? and turma.turno_turma in('Matutino', 'Vespertino');
+                """, new Object[]{id}, String.class);
+}
+    public String obterMensalidadeGrande(String id) {
         return jdbcTemplate.queryForObject("""
-                SELECT ROUND((SUM(t.qtd_ingressantes) - SUM(t.qtd_alunos_permanencia)) * 100.0 / SUM(t.qtd_ingressantes),2)
-                FROM turma t
-                INNER JOIN curso c ON t.fkcodigo_curso = c.codigo_curso
-                INNER JOIN instituicao inst ON c.fkcodigo_instituicao = inst.codigo_instituicao
-                WHERE inst.codigo_instituicao = ?;
+                select count(turma.codigo_turma) from turma
+                inner join curso on curso.codigo_curso = turma.fkcodigo_curso
+                inner join instituicao on instituicao.codigo_instituicao = curso.fkcodigo_instituicao
+                where instituicao.codigo_instituicao =  ? and turma.mensalidade_turma > 927.00;
+                
+                """, new Object[]{id}, String.class);
+    }
+    public String obterQtdTurmasExatas(String id) {
+        return jdbcTemplate.queryForObject("""
+                select count(turma.codigo_turma) from turma
+                inner join curso on curso.codigo_curso = turma.fkcodigo_curso
+                inner join instituicao on instituicao.codigo_instituicao = curso.fkcodigo_instituicao
+                inner join area_curso on area_curso.codigo_area = curso.fkcodigo_area
+                where instituicao.codigo_instituicao =  ? and area_curso.nome_area  = 'Ciências  naturais, matemática e estatística';
+                """, new Object[]{id}, String.class);
+    }
+    public String obterQtdTurmasSaude(String id) {
+        return jdbcTemplate.queryForObject("""
+                select count(turma.codigo_turma) from turma
+                inner join curso on curso.codigo_curso = turma.fkcodigo_curso
+                inner join instituicao on instituicao.codigo_instituicao = curso.fkcodigo_instituicao
+                inner join area_curso on area_curso.codigo_area = curso.fkcodigo_area
+                where instituicao.codigo_instituicao =  ? and area_curso.nome_area  = 'Saúde e bem estar';
+                """, new Object[]{id}, String.class);
+    }
+    public String obterQtdTurmasCienciasSociais(String id) {
+        return jdbcTemplate.queryForObject("""
+                select count(turma.codigo_turma) from turma
+                inner join curso on curso.codigo_curso = turma.fkcodigo_curso
+                inner join instituicao on instituicao.codigo_instituicao = curso.fkcodigo_instituicao
+                inner join area_curso on area_curso.codigo_area = curso.fkcodigo_area
+                where instituicao.codigo_instituicao =  ? and area_curso.nome_area  = 'Ciências sociais, comunicação e informação';
                 """, new Object[]{id}, String.class);
     }
 
